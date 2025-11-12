@@ -1,4 +1,4 @@
-dist <- function(x, method, diag, upper, p) {
+dist <- function(x, method, diag = FALSE, upper = FALSE, p = 2) {
   # Validate distance method
   if (!(method %in% c("euclidean", "maximum", "manhattan",
                     "canberra", "binary", "minkowski"))) {
@@ -10,57 +10,48 @@ dist <- function(x, method, diag, upper, p) {
   if (!is.numeric(x)) {
     stop("x was not coerced to numeric")
   }
+  
   n <- nrow(x)
   row_names <- rownames(x)
-  x <- t(x) # Transpose for column-major operations
-  print("x=")
-  print(x)
+  
+  # Transpose for column-major operations
+  x <- t(x)
   
   # Calculate distance
   calc_dist <- function(x, method) {
     dist_matrix <- matrix(0, nrow = n, ncol = n)
-    print("dist_matrix=")
-    print(dist_matrix)
     
     # Compare all rows to each other
     for (i in 1:(n - 1)) {
-      cat("Filling row", i, "of dist matrix:\n")
       min_row <- i + 1
-      cat("min_row =", min_row, "\n")
-      cat("min_row:n=", min_row:n, "\n")
       for (j in min_row:n) {
-        cat("Compare row", i, "to row", j, "\n")
-        cat("Row i = ", i, "is", x[, i], "\n")
-        cat("Row j = ", j, "is", x[, j], "\n")
-        
         # Calculate distance between two rows
         a <- x[, i]
         b <- x[, j]
         dist_row <- vector(mode = "numeric", length = length(a))
-        if (method == "euclidean") {
-          dist_row <- a - b
-          print(dist_row)
-          dist_row <- dist_row^2
-          print(dist_row)
+        if (method == "euclidean" || method == "minkowski") {
+          if (method == "euclidean") {
+            p <- 2
+          }
+          dist_row <- abs(a - b)
+          dist_row <- dist_row^p
           dist_row <- sum(dist_row)
-          print(dist_row)
-          dist_row <- sqrt(dist_row)
-          print(dist_row)
+          dist_row <- dist_row^(1/p)
         }
         else if (method == "maximum") {
-          # TODO: implement
+          dist_row <- abs(a - b)
+          dist_row <- max(dist_row)
         }
         else if (method == "manhattan") {
-          # TODO: implement
+          dist_row <- abs(a - b)
+          dist_row <- sum(dist_row)
         }
         else if (method == "canberra") {
-          # TODO: implement
+          dist_row <- abs(a - b) / (abs(a) + abs(b))
+          dist_row <- sum(dist_row)
         }
-        else if (method == "binary") {
-          # TODO: implement
-        }
-        else {
-          # TODO: implement
+        else { # Binary distance
+          dist_row <- len(intersect(a, b))
         }
         
         # Assign values to dist_matrix
@@ -74,9 +65,11 @@ dist <- function(x, method, diag, upper, p) {
   
   dist_matrix <- calc_dist(x, method)
   rownames(dist_matrix) <- row_names
-  print(dist_matrix)
-  dist_matrix <- as.dist(dist_matrix)
-  return(dist_matrix)
+  dist_obj <- as.dist(dist_matrix)
+  if (!diag && !upper) {
+    return(dist_obj)
+  }
+  return(print(dist_obj, diag = diag, upper = upper))
 }
 
 # Test the function
@@ -89,8 +82,8 @@ mat <- rbind(a, b, c, d)
 
 mat
 
-stats::dist(mat, method="euclidean")
-dist(mat, method="euclidean")
+stats::dist(mat, method="canberra", upper=TRUE)
+dist(mat, method="canberra", upper=TRUE)
 
 library(microbenchmark)
 library(ggplot2)

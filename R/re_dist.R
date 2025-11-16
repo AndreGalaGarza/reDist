@@ -1,3 +1,10 @@
+#' Reimplementation of dist()
+#'
+#' @description
+#' This function reimplements the dist() function in base R
+#' as accurately as possible.
+#' 
+#' @export
 re_dist <- function(x, method, diag = FALSE, upper = FALSE, p = 2) {
   # Validate distance method
   if (!(method %in% c("euclidean", "maximum", "manhattan",
@@ -37,20 +44,16 @@ re_dist <- function(x, method, diag = FALSE, upper = FALSE, p = 2) {
           dist_row <- dist_row^p
           dist_row <- sum(dist_row)
           dist_row <- dist_row^(1/p)
-        }
-        else if (method == "maximum") {
+        } else if (method == "maximum") {
           dist_row <- abs(a - b)
           dist_row <- max(dist_row)
-        }
-        else if (method == "manhattan") {
+        } else if (method == "manhattan") {
           dist_row <- abs(a - b)
           dist_row <- sum(dist_row)
-        }
-        else if (method == "canberra") {
+        } else if (method == "canberra") {
           dist_row <- abs(a - b) / (abs(a) + abs(b))
           dist_row <- sum(dist_row)
-        }
-        else { # Binary distance
+        } else { # Binary distance
           dist_row <- len(intersect(a, b))
         }
         

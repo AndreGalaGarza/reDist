@@ -6,7 +6,7 @@ output: rmarkdown::html_vignette
 description: >
   This is a tutorial on how to use re_dist(), a reimplementation of the dist() function from base R.
 vignette: >
-  %\VignetteIndexEntry{dist}
+  %\VignetteIndexEntry{re_dist}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -17,7 +17,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This vignette shows the various usages for the re_dist() function and compares them to the original implementation of dist() in base R.
 
-```{r cars}
+## Overview
+
+```{r}
 a <- c(1, 2, 3, 4)
 b <- c(6, 7, 6, 1)
 c <- c(1, 2, 2, 5)

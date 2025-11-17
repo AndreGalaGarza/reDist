@@ -1,4 +1,4 @@
-# re_dist(): Reimplementation of dist() from base R
+# reDist: Reimplementation of dist() Function From Base R
 ## Overview
 This package reimplements the base R function [dist()](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/dist).
 

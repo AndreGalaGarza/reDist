@@ -17,21 +17,92 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This vignette shows the various usages for the re_dist() function and compares them to the original implementation of dist() in base R.
 
-## Overview
+## Setup
 
+```{r}
+library(reDist)
+```
+
+```{r}
+compare_dist_calcs <- function(mat, method, diag = FALSE, upper = FALSE, p = 2) {
+  dist_base <- stats::dist(mat, method, diag = diag, upper = upper, p = p)
+  dist_reDist <- re_dist(mat, method)
+  
+  print(dist_base)
+  print(dist_reDist)
+  
+  return(all.equal(as.matrix(dist_base), as.matrix(dist_reDist)))
+}
+```
+
+Here is a sample matrix that we will use to showcase re_dist():
 ```{r}
 a <- c(1, 2, 3, 4)
 b <- c(6, 7, 6, 1)
 c <- c(1, 2, 2, 5)
 d <- c(8, 9, 0, 1)
+
+mat <- rbind(a, b, c, d)
+
+mat
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+## Euclidean distance
+TODO: description of distance
+```{r}
+compare_dist_calcs(mat, "euclidean")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Maximum distance
+TODO: description of distance
+```{r}
+compare_dist_calcs(mat, "maximum")
+```
+
+## Manhattan distance
+TODO: description of distance
+```{r}
+compare_dist_calcs(mat, "manhattan")
+```
+
+## Canberra distance
+TODO: description of distance
+```{r}
+compare_dist_calcs(mat, "canberra")
+```
+
+## Binary distance
+TODO: description of distance
+```{r}
+compare_dist_calcs(mat, "binary")
+```
+
+## Minkowski distance
+TODO: description of distance
+```{r}
+compare_dist_calcs(mat, "minkowski")
+```
+
+## Show diagonal of matrix
+```{r}
+compare_dist_calcs(mat, "euclidean", diag = TRUE)
+```
+
+## Show upper triangular part of matrix
+```{r}
+compare_dist_calcs(mat, "euclidean", upper = TRUE)
+```
+
+## Benchmark test
+```{r}
+library(microbenchmark)
+library(ggplot2)
+
+bm_results <- microbenchmark(
+  stats::dist(mat, method="euclidean"),
+  re_dist(mat, method="euclidean"),
+  times = 100
+)
+
+autoplot(bm_results)
+```

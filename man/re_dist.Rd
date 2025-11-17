@@ -4,7 +4,7 @@
 \alias{re_dist}
 \title{Reimplementation of dist()}
 \usage{
-re_dist(x, method, p = 2)
+re_dist(x, method = "euclidean", p = 2)
 }
 \arguments{
 \item{x}{An object coercible to a numeric matrix, such as a matrix, data frame, or \code{dist} object. Any non-numerical columns in x will cause an error.}

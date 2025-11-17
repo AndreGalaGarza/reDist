@@ -54,7 +54,11 @@ re_dist <- function(x, method, diag = FALSE, upper = FALSE, p = 2) {
           dist_row <- abs(a - b) / (abs(a) + abs(b))
           dist_row <- sum(dist_row)
         } else { # Binary distance
-          dist_row <- length(intersect(a, b))
+          a1 <- which(a != 0)
+          b1 <- which(b != 0)
+          inter <- length(intersect(a1, b1))
+          uni   <- length (union(a1, b1))
+          dist_row <- 1 - inter / uni
         }
 
         # Assign values to dist_matrix

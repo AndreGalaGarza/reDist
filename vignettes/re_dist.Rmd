@@ -24,9 +24,10 @@ library(reDist)
 ```
 
 ```{r}
-compare_dist_calcs <- function(mat, method, diag = FALSE, upper = FALSE, p = 2) {
-  dist_base <- stats::dist(mat, method, diag = diag, upper = upper, p = p)
-  dist_reDist <- re_dist(mat, method)
+compare_dist_calcs <- function(mat, method, diag = FALSE, upper = FALSE,
+                               p = 2, display = FALSE) {
+  dist_base <- stats::dist(mat, method, diag, upper, p)
+  dist_reDist <- re_dist(mat, method, diag, upper, p)
   
   print(dist_base)
   print(dist_reDist)
@@ -35,7 +36,7 @@ compare_dist_calcs <- function(mat, method, diag = FALSE, upper = FALSE, p = 2) 
 }
 ```
 
-Here is a sample matrix that we will use to showcase re_dist():
+re_dist() sets up a distance matrix that shows the distance between each pair of rows in a matrix. Here is a sample matrix that we will use to showcase re_dist():
 ```{r}
 a <- c(1, 2, 3, 4)
 b <- c(6, 7, 6, 1)
@@ -48,53 +49,91 @@ mat
 ```
 
 ## Euclidean distance
-TODO: description of distance
+The Euclidean distance is the square root of the sum of the squared differences between corresponding components of the two vectors.
+
 ```{r}
-compare_dist_calcs(mat, "euclidean")
+re_dist(mat, method = "euclidean")
+```
+
+```{r}
+compare_dist_calcs(mat, "euclidean", display = TRUE)
 ```
 
 ## Maximum distance
-TODO: description of distance
+The maximum distance is the largest absolute difference between any pair of corresponding components of the two vectors.
+
 ```{r}
-compare_dist_calcs(mat, "maximum")
+re_dist(mat, method = "maximum")
+```
+
+```{r}
+compare_dist_calcs(mat, "maximum", display = TRUE)
 ```
 
 ## Manhattan distance
-TODO: description of distance
+The Manhattan distance is the sum of the absolute differences between corresponding components of the two vectors.
+
 ```{r}
-compare_dist_calcs(mat, "manhattan")
+re_dist(mat, method = "manhattan")
+```
+
+```{r}
+compare_dist_calcs(mat, "manhattan", display = TRUE)
 ```
 
 ## Canberra distance
-TODO: description of distance
+The Canberra distance is the sum over all components of |x_i - y_i| / (|x_i| + |y_i|), omitting any terms where both x_i and y_i are zero.
+
 ```{r}
-compare_dist_calcs(mat, "canberra")
+re_dist(mat, method = "canberra")
+```
+
+```{r}
+compare_dist_calcs(mat, "canberra", display = TRUE)
 ```
 
 ## Binary distance
-TODO: description of distance
+The binary distance treats non-zero values as “1” and zeros as “0” and is the proportion of positions where exactly one vector is 1 among all positions where at least one vector is 1.
+
 ```{r}
-compare_dist_calcs(mat, "binary")
+re_dist(mat, method = "binary")
+```
+
+```{r}
+compare_dist_calcs(mat, "binary", display = TRUE)
 ```
 
 ## Minkowski distance
-TODO: description of distance
+The Minkowski distance is the p-th root of the sum of the p-th powers of the absolute differences between corresponding components of the two vectors. The value of p is 2 by default, but it can be changed to a custom value.
+
 ```{r}
-compare_dist_calcs(mat, "minkowski")
+re_dist(mat, method = "minkowski")
+```
+
+```{r}
+compare_dist_calcs(mat, "minkowski", display = TRUE)
 ```
 
 ## Show diagonal of matrix
 ```{r}
-compare_dist_calcs(mat, "euclidean", diag = TRUE)
+stats::dist(mat, method = "euclidean", diag = TRUE)
+re_dist(mat, method = "euclidean", diag = TRUE)
 ```
 
 ## Show upper triangular part of matrix
 ```{r}
-compare_dist_calcs(mat, "euclidean", upper = TRUE)
+stats::dist(mat, method = "euclidean", upper = TRUE)
+re_dist(mat, method = "euclidean", upper = TRUE)
+```
+
+## Show entire matrix
+```{r}
+stats::dist(mat, method = "euclidean", diag = TRUE, upper = TRUE)
+re_dist(mat, method = "euclidean", diag = TRUE, upper = TRUE)
 ```
 
 ## Benchmark test
-```{r}
+```{r, fig.width = 8, fig.height = 4}
 library(microbenchmark)
 library(ggplot2)
 
